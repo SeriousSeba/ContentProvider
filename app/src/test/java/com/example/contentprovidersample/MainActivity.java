@@ -18,9 +18,6 @@ public class MainActivity extends Activity {
     }
     public void onClickAddName(View view) {
         ContentValues values = new ContentValues();
-        /**
-         * Dodac wartosc na podstawie nazwy kolumny w tablicy
-         */
         values.put(StudentsProvider.NAME,
                 ((EditText)findViewById(R.id.editText2)).getText().toString());
 
