@@ -39,9 +39,6 @@ public class StudentsProvider extends ContentProvider {
         uriMatcher.addURI(PROVIDER_NAME, "students/#", STUDENT_ID);
     }
 
-    /**
-     * Database specific constant declarations
-     */
 
     private SQLiteDatabase db;
     static final String DATABASE_NAME = "College";
@@ -52,11 +49,6 @@ public class StudentsProvider extends ContentProvider {
                     " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     " name TEXT NOT NULL, " +
                     " grade TEXT NOT NULL);";
-
-    /**
-     * Helper class that actually creates and manages
-     * the provider's underlying data repository.
-     */
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
         DatabaseHelper(Context context){
@@ -80,25 +72,14 @@ public class StudentsProvider extends ContentProvider {
         Context context = getContext();
         DatabaseHelper dbHelper = new DatabaseHelper(context);
 
-        /**
-         * Create a write able database which will trigger its
-         * creation if it doesn't already exist.
-         */
-
         db = dbHelper.getWritableDatabase();
         return (db == null)? false:true;
     }
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        /**
-         * Add a new student record
-         */
         long rowID = db.insert(	STUDENTS_TABLE_NAME, "", values);
 
-        /**
-         * If record is added successfully
-         */
         if (rowID > 0) {
             Uri _uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
             getContext().getContentResolver().notifyChange(_uri, null);
@@ -127,17 +108,12 @@ public class StudentsProvider extends ContentProvider {
         }
 
         if (sortOrder == null || sortOrder == ""){
-            /**
-             * By default sort on student names
-             */
             sortOrder = NAME;
         }
 
         Cursor c = qb.query(db,	projection,	selection,
                 selectionArgs,null, null, sortOrder);
-        /**
-         * register to watch a content URI for changes
-         */
+   
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
     }
@@ -188,14 +164,8 @@ public class StudentsProvider extends ContentProvider {
     @Override
     public String getType(Uri uri) {
         switch (uriMatcher.match(uri)){
-            /**
-             * Get all student records
-             */
             case STUDENTS:
                 return "vnd.android.cursor.dir/vnd.example.students";
-            /**
-             * Get a particular student
-             */
             case STUDENT_ID:
                 return "vnd.android.cursor.item/vnd.example.students";
             default:
